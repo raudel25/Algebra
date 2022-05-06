@@ -5,7 +5,7 @@ public class EquationLinealSystem
     public string Solution { get; private set; }
     public EquationLinealSystem(double[,] matrix)
     {
-        Matrix.Gauss(matrix);
+        MatrixProperty.Gauss(matrix);
         _Comp c = Compatibility(matrix);
         bool[] varLi = new bool[matrix.GetLength(1) - 1];
         if (c == _Comp.CD || c == _Comp.CI)
