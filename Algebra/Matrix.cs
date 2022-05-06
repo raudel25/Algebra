@@ -94,7 +94,7 @@ public class Matrix
                     inverse[i, j] = Math.Pow(-1, i + j) * FindDet(aux) * (1 / this.Det);
                 }
             }
-            return new Matrix(inverse);
+            return new Matrix(inverse).Transposed();
         }
         return null!;
     }
