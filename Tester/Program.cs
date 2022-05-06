@@ -1,19 +1,20 @@
 ﻿using Algebra;
 
 double[,] matrix ={
-    {1,2,3,0},
-    {4,5,6,0},
-    {7,8,9,0},
+    {1,0,0},
+    {0,1,0},
+    {0,0,1},
 };
 double[,] matrix1 ={
     {1,2,3},
     {4,5,6},
-    {7,8,9},
+    {7,8,8},
 };
 
 EquationLinealSystem equation = new EquationLinealSystem(matrix);
-MatrixProperty m = new MatrixProperty(matrix);
+Matrix m = new Matrix(matrix);
+Matrix m1 = new Matrix(matrix1);
 
-Console.WriteLine(m.Det);
-Console.WriteLine(m.Transposed);
+Console.WriteLine(m.Inverse());
+Console.WriteLine(Matrix.Product(m, m.Inverse()));
 Console.WriteLine(equation.Solution);
