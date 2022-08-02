@@ -2,24 +2,46 @@ namespace Algebra;
 
 public class Matrix
 {
+    /// <summary>
+    /// Cantidad de filas de la matriz
+    /// </summary>
     public int Rows
     {
         get { return _originalMatrix.GetLength(0); }
     }
 
+    /// <summary>
+    /// Cantidad de columnas de la matriz
+    /// </summary>
     public int Columns
     {
         get { return _originalMatrix.GetLength(1); }
     }
 
+    /// <summary>
+    /// Rango de la matriz
+    /// </summary>
     public int Rank { get; private set; }
+
+    /// <summary>
+    /// Determinante de la matriz
+    /// </summary>
     public double Det { get; private set; }
 
+    /// <summary>
+    /// Matriz original
+    /// </summary>
     private double[,] _originalMatrix;
 
     public double this[int a, int b]
     {
-        get { return _originalMatrix[a, b]; }
+        get
+        {
+            if (a < 0 || a >= _originalMatrix.GetLength(0)) throw new IndexOutOfRangeException();
+            if (b < 0 || b >= _originalMatrix.GetLength(0)) throw new IndexOutOfRangeException();
+
+            return _originalMatrix[a, b];
+        }
     }
 
     public Matrix(double[,] matrix)
@@ -38,7 +60,8 @@ public class Matrix
             s = s + " [ ";
             for (int j = 0; j < _originalMatrix.GetLength(1); j++)
             {
-                s = s + _originalMatrix[i, j] + ", ";
+                string l = j != _originalMatrix.GetLength(1) - 1 ? ", " : "";
+                s = s + _originalMatrix[i, j] + l;
             }
 
             s = s + "],\n";
@@ -48,11 +71,11 @@ public class Matrix
         return s;
     }
 
-    public static Matrix Sum(Matrix m1, Matrix m2)
+    public static Matrix? Sum(Matrix m1, Matrix m2)
     {
         if (m1.Rows != m2.Rows || m1.Columns != m2.Columns)
         {
-            return null!;
+            return null;
         }
 
         double[,] matrix = new double[m1.Rows, m1.Columns];
@@ -67,11 +90,11 @@ public class Matrix
         return new Matrix(matrix);
     }
 
-    public static Matrix Product(Matrix m1, Matrix m2)
+    public static Matrix? Product(Matrix m1, Matrix m2)
     {
         if (m1.Columns != m2.Rows)
         {
-            return null!;
+            return null;
         }
 
         double[,] matrix = new double[m1.Rows, m2.Columns];
@@ -106,7 +129,11 @@ public class Matrix
         return original;
     }
 
-    public Matrix Inverse()
+    /// <summary>
+    /// Determinar la matriz inversa
+    /// </summary>
+    /// <returns>Matriz inversa</returns>
+    public Matrix? Inverse()
     {
         double[,] inverse = new double[this._originalMatrix.GetLength(0), this._originalMatrix.GetLength(1)];
         if (this.Det != 0)
@@ -124,9 +151,13 @@ public class Matrix
             return new Matrix(inverse).Transposed();
         }
 
-        return null!;
+        return null;
     }
 
+    /// <summary>
+    /// Determinar la matriz transpuesta
+    /// </summary>
+    /// <returns>Matriz transpuesta</returns>
     private Matrix Transposed()
     {
         double[,] transposed = new double[this._originalMatrix.GetLength(1), this._originalMatrix.GetLength(0)];
@@ -141,6 +172,11 @@ public class Matrix
         return new Matrix(transposed);
     }
 
+    /// <summary>
+    /// Calcular el determinate
+    /// </summary>
+    /// <param name="matrix">Matriz</param>
+    /// <returns>Determinate de la matriz</returns>
     private static double FindDet(double[,] matrix)
     {
         if (matrix.GetLength(0) != matrix.GetLength(1)) return 0;
@@ -154,6 +190,11 @@ public class Matrix
         return det;
     }
 
+    /// <summary>
+    /// Calcular el rango
+    /// </summary>
+    /// <param name="matrix">Matriz</param>
+    /// <returns>Rango de la matriz</returns>
     private static int FindRank(double[,] matrix)
     {
         int rowsLi = 0;
@@ -172,6 +213,10 @@ public class Matrix
         return rowsLi;
     }
 
+    /// <summary>
+    /// Escalonar una matriz
+    /// </summary>
+    /// <param name="matrix">Matriz a escalonar</param>
     public static void Gauss(double[,] matrix)
     {
         for (int i = 0; i < Math.Min(matrix.GetLength(0), matrix.GetLength(1)); i++)
@@ -216,6 +261,13 @@ public class Matrix
         return true;
     }
 
+    /// <summary>
+    /// Eliminar filas y columnas de una matriz
+    /// </summary>
+    /// <param name="matrix">Matriz</param>
+    /// <param name="row">Filas a eliminar</param>
+    /// <param name="column">Columnas a eliminar</param>
+    /// <returns>Matriz reducida</returns>
     public static double[,] Reduce(double[,] matrix, int[] row, int[] column)
     {
         double[,] reduce = new double[matrix.GetLength(0) - row.Length, matrix.GetLength(1) - column.Length];

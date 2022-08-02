@@ -2,6 +2,9 @@
 
 public class EquationLinealSystem
 {
+    /// <summary>
+    /// Determinar la compatibilidad del sistema
+    /// </summary>
     private enum Comp
     {
         Cd,
@@ -24,29 +27,40 @@ public class EquationLinealSystem
         else this.Solution = "No hay soluciones";
     }
 
+    /// <summary>
+    /// Determinar la compatibilidad del sistema
+    /// </summary>
+    /// <param name="matrix">Matriz del ampliada</param>
+    /// <returns>Compatibilidad</returns>
     private Comp Compatibility(double[,] matrix)
     {
-        int rowsLi = 0;
+        int rowsLd = 0;
         for (int i = 0; i < matrix.GetLength(0); i++)
         {
-            bool li = true;
+            bool ld = true;
             for (int j = 0; j < matrix.GetLength(1); j++)
             {
                 if (matrix[i, j] != 0)
                 {
-                    li = false;
+                    ld = false;
                     if (j == matrix.GetLength(1) - 1) return Comp.I;
                     break;
                 }
             }
 
-            if (li) rowsLi++;
+            if (ld) rowsLd++;
         }
 
-        if (matrix.GetLength(0) - rowsLi != matrix.GetLength(1)) return Comp.Ci;
+        if (matrix.GetLength(0) - rowsLd != matrix.GetLength(1)) return Comp.Ci;
         return Comp.Cd;
     }
 
+    /// <summary>
+    /// Determinar la solucion
+    /// </summary>
+    /// <param name="matrix">Matriz ampliada</param>
+    /// <param name="varLi">Varibles linealmente independientes</param>
+    /// <returns>Arreglo con las soluciones del sistema</returns>
     private double[,] SearchSolution(double[,] matrix, bool[] varLi)
     {
         double[,] solution = new double[matrix.GetLength(1) - 1, matrix.GetLength(1)];
@@ -55,6 +69,12 @@ public class EquationLinealSystem
         return solution;
     }
 
+    /// <summary>
+    /// Simplificar las ecuaciones de las soluciones del sistema
+    /// </summary>
+    /// <param name="matrix">Matriz ampliada</param>
+    /// <param name="solution">Arreglo con las soluciones del sistema</param>
+    /// <param name="varLi">Varibles linealmente independientes</param>
     private void SimplifyEquation(double[,] matrix, double[,] solution, bool[] varLi)
     {
         int min = Math.Min(matrix.GetLength(0), matrix.GetLength(1) - 1);
@@ -79,6 +99,11 @@ public class EquationLinealSystem
         }
     }
 
+    /// <summary>
+    /// Sustituir en las ecuaciones de las soluciones del sistema
+    /// </summary>
+    /// <param name="solution">Arreglo con las soluciones del sistema</param>
+    /// <param name="varLi">Varibles linealmente independientes</param>
     private void SubstituteEquation(double[,] solution, bool[] varLi)
     {
         for (int i = varLi.Length - 1; i >= 0; i--)
@@ -100,6 +125,12 @@ public class EquationLinealSystem
         }
     }
 
+    /// <summary>
+    /// Construir un string de las soluciones del sistema
+    /// </summary>
+    /// <param name="solutionMatrix">Arreglo con las soluciones del sistema</param>
+    /// <param name="varli">Varibles linealmente independientes</param>
+    /// <returns>String con las soluciones del sistema</returns>
     public string BuildSoilution(double[,] solutionMatrix, bool[] varli)
     {
         string s = "";
@@ -119,7 +150,7 @@ public class EquationLinealSystem
                 if (solutionMatrix[i, j] == 0) continue;
 
                 variable = true;
-                
+
                 sign = solutionMatrix[i, j] >= 0 ? "+ " : "- ";
                 if (s[s.Length - 2] == '=')
                 {

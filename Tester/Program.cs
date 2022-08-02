@@ -12,3 +12,5 @@ Matrix matrix = new Matrix(m);
 EquationLinealSystem q = new EquationLinealSystem(m);
 
 Console.WriteLine(q.Solution);
+
+Console.WriteLine(matrix);
