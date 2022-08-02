@@ -1,22 +1,30 @@
 ﻿namespace Algebra;
+
 public class EquationLinealSystem
 {
-    private enum _Comp { CD, CI, I };
+    private enum Comp
+    {
+        Cd,
+        Ci,
+        I
+    };
+
     public string Solution { get; private set; }
+
     public EquationLinealSystem(double[,] matrix)
     {
         Matrix.Gauss(matrix);
-        _Comp c = Compatibility(matrix);
+        Comp c = Compatibility(matrix);
         bool[] varLi = new bool[matrix.GetLength(1) - 1];
-        if (c == _Comp.CD || c == _Comp.CI)
+        if (c == Comp.Cd || c == Comp.Ci)
         {
             double[,] aux = SearchSolution(matrix, varLi);
             this.Solution = BuildSoilution(aux, varLi);
         }
         else this.Solution = "No hay soluciones";
-
     }
-    private _Comp Compatibility(double[,] matrix)
+
+    private Comp Compatibility(double[,] matrix)
     {
         int rowsLi = 0;
         for (int i = 0; i < matrix.GetLength(0); i++)
@@ -27,15 +35,18 @@ public class EquationLinealSystem
                 if (matrix[i, j] != 0)
                 {
                     li = false;
-                    if (j == matrix.GetLength(1) - 1) return _Comp.I;
+                    if (j == matrix.GetLength(1) - 1) return Comp.I;
                     break;
                 }
             }
+
             if (li) rowsLi++;
         }
-        if (matrix.GetLength(0) - rowsLi != matrix.GetLength(1)) return _Comp.CI;
-        return _Comp.CD;
+
+        if (matrix.GetLength(0) - rowsLi != matrix.GetLength(1)) return Comp.Ci;
+        return Comp.Cd;
     }
+
     private double[,] SearchSolution(double[,] matrix, bool[] varLi)
     {
         double[,] solution = new double[matrix.GetLength(1) - 1, matrix.GetLength(1)];
@@ -43,10 +54,10 @@ public class EquationLinealSystem
         SubstituteEquation(solution, varLi);
         return solution;
     }
+
     private void SimplifyEquation(double[,] matrix, double[,] solution, bool[] varLi)
     {
         int min = Math.Min(matrix.GetLength(0), matrix.GetLength(1) - 1);
-        int max = Math.Max(matrix.GetLength(0), matrix.GetLength(1) - 1);
         for (int i = min - 1; i >= 0; i--)
         {
             int variable = -1;
@@ -55,7 +66,9 @@ public class EquationLinealSystem
             {
                 if (variable == -1 && matrix[i, j] != 0)
                 {
-                    pivot = matrix[i, j]; variable = j; varLi[j] = true;
+                    pivot = matrix[i, j];
+                    variable = j;
+                    varLi[j] = true;
                 }
                 else if (variable != -1)
                 {
@@ -65,6 +78,7 @@ public class EquationLinealSystem
             }
         }
     }
+
     private void SubstituteEquation(double[,] solution, bool[] varLi)
     {
         for (int i = varLi.Length - 1; i >= 0; i--)
@@ -79,15 +93,17 @@ public class EquationLinealSystem
                     {
                         solution[i, x] += solution[j, x] * solution[i, j];
                     }
+
                     solution[i, j] = 0;
                 }
             }
         }
     }
-    public string BuildSoilution(double[,] SolutionMatrix, bool[] varli)
+
+    public string BuildSoilution(double[,] solutionMatrix, bool[] varli)
     {
         string s = "";
-        for (int i = 0; i < SolutionMatrix.GetLength(0); i++)
+        for (int i = 0; i < solutionMatrix.GetLength(0); i++)
         {
             s = s + "x" + (i + 1) + " = ";
             if (!varli[i])
@@ -95,13 +111,41 @@ public class EquationLinealSystem
                 s = s + "x" + (i + 1) + "\n";
                 continue;
             }
-            for (int j = 0; j < SolutionMatrix.GetLength(1) - 1; j++)
+
+            bool variable = false;
+            string sign;
+            for (int j = 0; j < solutionMatrix.GetLength(1) - 1; j++)
             {
-                if (SolutionMatrix[i, j] == 0) continue;
-                s = s + SolutionMatrix[i, j] + "*x" + (j + 1) + " ";
+                if (solutionMatrix[i, j] == 0) continue;
+
+                variable = true;
+                
+                sign = solutionMatrix[i, j] >= 0 ? "+ " : "- ";
+                if (s[s.Length - 2] == '=')
+                {
+                    if (sign == "+ ") sign = "";
+                    else sign = "-";
+                }
+
+                string number = Math.Abs(solutionMatrix[i, j]) == 1 ? "" : Math.Abs(solutionMatrix[i, j]) + "*";
+                s = s + sign + number + "x" + (j + 1) + " ";
             }
-            s = s + SolutionMatrix[i, SolutionMatrix.GetLength(1) - 1] + "\n";
+
+            if (solutionMatrix[i, solutionMatrix.GetLength(1) - 1] != 0 || !variable)
+            {
+                sign = solutionMatrix[i, solutionMatrix.GetLength(1) - 1] >= 0 ? "+ " : "- ";
+                if (s[s.Length - 2] == '=')
+                {
+                    if (sign == "+ ") sign = "";
+                    else sign = "-";
+                }
+
+                s = s + sign + Math.Abs(solutionMatrix[i, solutionMatrix.GetLength(1) - 1]);
+            }
+
+            s = s + "\n";
         }
+
         return s;
     }
 }

@@ -1,19 +1,14 @@
 ﻿using Algebra;
 
-double[,] matrix ={
-    {1,0,0},
-    {0,1,0},
-    {0,0,1},
-};
-double[,] matrix1 ={
-    {1,2},
-    {4,5},
+double[,] m =
+{
+    {1, 2, 1, 0},
+    {3, 3, 0, 0},
+    {1, 4, 3, 0}
 };
 
-EquationLinealSystem equation = new EquationLinealSystem(matrix);
-Matrix m = new Matrix(matrix);
-Matrix m1 = new Matrix(matrix1);
+Matrix matrix = new Matrix(m);
 
-Console.WriteLine(m.Inverse());
-Console.WriteLine(Matrix.Product(m1, m1.Inverse()));
-Console.WriteLine(equation.Solution);
+EquationLinealSystem q = new EquationLinealSystem(m);
+
+Console.WriteLine(q.Solution);
