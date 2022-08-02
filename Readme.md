@@ -17,7 +17,7 @@ Junto a la biblioteca está implementada una aplicación de consola que sirve pa
 
 Para ejecutarla debe escribir en la consola:
 ```bash
-    make dev
+    make
 ```
 para linux y
 
