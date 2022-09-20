@@ -22,7 +22,7 @@ public class EquationLinealSystem
         if (c == Comp.Cd || c == Comp.Ci)
         {
             double[,] aux = SearchSolution(matrix, varLi);
-            this.Solution = BuildSoilution(aux, varLi);
+            this.Solution = BuildSolution(aux, varLi);
         }
         else this.Solution = "No hay soluciones";
     }
@@ -131,15 +131,15 @@ public class EquationLinealSystem
     /// <param name="solutionMatrix">Arreglo con las soluciones del sistema</param>
     /// <param name="varli">Varibles linealmente independientes</param>
     /// <returns>String con las soluciones del sistema</returns>
-    public string BuildSoilution(double[,] solutionMatrix, bool[] varli)
+    public string BuildSolution(double[,] solutionMatrix, bool[] varli)
     {
         string s = "";
         for (int i = 0; i < solutionMatrix.GetLength(0); i++)
         {
-            s = s + "x" + (i + 1) + " = ";
+            s += $"{(char) (i + 'a')} = ";
             if (!varli[i])
             {
-                s = s + "x" + (i + 1) + "\n";
+                s += (char) (i + 'a') + "\n";
                 continue;
             }
 
@@ -152,29 +152,22 @@ public class EquationLinealSystem
                 variable = true;
 
                 sign = solutionMatrix[i, j] >= 0 ? "+ " : "- ";
-                if (s[s.Length - 2] == '=')
-                {
-                    if (sign == "+ ") sign = "";
-                    else sign = "-";
-                }
+                if (s[s.Length - 2] == '=') sign = sign == "+ " ? "" : "-";
 
-                string number = Math.Abs(solutionMatrix[i, j]) == 1 ? "" : Math.Abs(solutionMatrix[i, j]) + "*";
-                s = s + sign + number + "x" + (j + 1) + " ";
+                string number = Math.Abs(solutionMatrix[i, j]) == 1 ? "" : Math.Abs(solutionMatrix[i, j]) + " * ";
+
+                s += $"{sign}{number}{(char) (j + 'a')} ";
             }
 
             if (solutionMatrix[i, solutionMatrix.GetLength(1) - 1] != 0 || !variable)
             {
                 sign = solutionMatrix[i, solutionMatrix.GetLength(1) - 1] >= 0 ? "+ " : "- ";
-                if (s[s.Length - 2] == '=')
-                {
-                    if (sign == "+ ") sign = "";
-                    else sign = "-";
-                }
+                if (s[s.Length - 2] == '=') sign = sign == "+ " ? "" : "-";
 
-                s = s + sign + Math.Abs(solutionMatrix[i, solutionMatrix.GetLength(1) - 1]);
+                s += sign + Math.Abs(solutionMatrix[i, solutionMatrix.GetLength(1) - 1]);
             }
 
-            s = s + "\n";
+            s += "\n";
         }
 
         return s;
