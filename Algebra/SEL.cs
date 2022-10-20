@@ -154,7 +154,9 @@ public class EquationLinealSystem
                 sign = solutionMatrix[i, j] >= 0 ? "+ " : "- ";
                 if (s[s.Length - 2] == '=') sign = sign == "+ " ? "" : "-";
 
-                string number = Math.Abs(solutionMatrix[i, j]) == 1 ? "" : Math.Abs(solutionMatrix[i, j]) + " * ";
+                string number = Math.Abs(solutionMatrix[i, j]) + "" == "1"
+                    ? ""
+                    : Math.Abs(solutionMatrix[i, j]) + " * ";
 
                 s += $"{sign}{number}{(char) (j + 'a')} ";
             }

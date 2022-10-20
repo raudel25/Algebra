@@ -242,18 +242,13 @@ public class Matrix
 
     private static bool ChangeRow(int rowChange, double[,] matrix)
     {
-        double change;
         for (int i = rowChange + 1; i < matrix.GetLength(0); i++)
         {
             if (matrix[i, rowChange] != 0)
             {
                 for (int j = 0; j < matrix.GetLength(1); j++)
-                {
-                    change = matrix[rowChange, j];
-                    matrix[rowChange, j] = matrix[i, j];
-                    matrix[i, j] = change;
-                }
-
+                    (matrix[rowChange, j], matrix[i, j]) = (matrix[i, j], matrix[rowChange, j]);
+                
                 return false;
             }
         }
@@ -268,7 +263,7 @@ public class Matrix
     /// <param name="row">Filas a eliminar</param>
     /// <param name="column">Columnas a eliminar</param>
     /// <returns>Matriz reducida</returns>
-    public static double[,] Reduce(double[,] matrix, int[] row, int[] column)
+    private static double[,] Reduce(double[,] matrix, int[] row, int[] column)
     {
         double[,] reduce = new double[matrix.GetLength(0) - row.Length, matrix.GetLength(1) - column.Length];
         int f = 0;
@@ -293,7 +288,7 @@ public class Matrix
         return reduce;
     }
 
-    public static bool Search(int a, int[] b, int cant)
+    private static bool Search(int a, int[] b, int cant)
     {
         for (int i = 0; i < cant; i++)
         {
